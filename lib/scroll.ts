@@ -1,3 +1,12 @@
+import { transform } from "motion/react";
+
+// A range map evaluated in JS. Passing ranges straight from useScroll lets Motion
+// hand opacity/transform to a native ScrollTimeline, which mis-maps our offsets.
+export function js<T extends number | string>(input: number[], output: T[]) {
+  const f = transform(input, output) as (v: number) => T;
+  return (v: number) => f(v);
+}
+
 // Maps 0..1 scroll progress onto n discrete stages that hold still in the middle
 // of their slice and ease between each other. Feed to useTransform(progress, input, output).
 export function plateaus(n: number, hold = 0.5) {

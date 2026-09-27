@@ -44,12 +44,13 @@ export const possibilities = [
   "Something people don't expect.",
 ];
 
-export const approach = [
-  "We start with the problem.",
-  "We understand the experience.",
-  "We design the system.",
-  "We build the technology.",
-  "We refine every detail.",
+// [lead, key word] — the key word acts out its verb on screen
+export const approach: [string, string][] = [
+  ["We start with the", "problem"],
+  ["We understand the", "experience"],
+  ["We design the", "system"],
+  ["We build the", "technology"],
+  ["We refine every", "detail"],
 ];
 
 export const capabilities = [

@@ -3,6 +3,7 @@
 import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "motion/react";
 import { useEffect, useRef } from "react";
 import { galaxy } from "@/lib/content";
+import { js } from "@/lib/scroll";
 import { buildField, drawField, type Field, type Sky } from "./field";
 import { buildGalaxy, buildStars } from "./sky";
 
@@ -24,11 +25,11 @@ export function Galaxy() {
   const ref = useRef<HTMLElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const bg = useTransform(scrollYProgress, [...T.dark, ...T.light], ["#f7f0e7", "#0c0b10", "#0c0b10", "#f7f0e7"]);
-  const nameColor = useTransform(scrollYProgress, T.light, ["#f7f0e7", "#242220"]);
-  const nameOpacity = useTransform(scrollYProgress, T.name, [0, 1]);
-  const nameSpacing = useTransform(scrollYProgress, [T.name[0], 0.94], ["0.06em", "-0.04em"]);
-  const nameY = useTransform(scrollYProgress, T.name, [40, 0]);
+  const bg = useTransform(scrollYProgress, js([...T.dark, ...T.light], ["#f7f0e7", "#0c0b10", "#0c0b10", "#f7f0e7"]));
+  const nameColor = useTransform(scrollYProgress, js(T.light, ["#f7f0e7", "#242220"]));
+  const nameOpacity = useTransform(scrollYProgress, js(T.name, [0, 1]));
+  const nameSpacing = useTransform(scrollYProgress, js([T.name[0], 0.94], ["0.06em", "-0.04em"]));
+  const nameY = useTransform(scrollYProgress, js(T.name, [40, 0]));
 
   // Canvas lives outside React: progress is read from a ref inside the frame loop.
   const progress = useRef(0);
@@ -139,9 +140,9 @@ export function Galaxy() {
 }
 
 function Line({ p, range, className, children }: { p: MotionValue<number>; range: number[]; className: string; children: React.ReactNode }) {
-  const opacity = useTransform(p, range, [0, 1, 1, 0]);
-  const y = useTransform(p, range, [30, 0, 0, -30]);
-  const blur = useTransform(p, range, [8, 0, 0, 8]);
+  const opacity = useTransform(p, js(range, [0, 1, 1, 0]));
+  const y = useTransform(p, js(range, [30, 0, 0, -30]));
+  const blur = useTransform(p, js(range, [8, 0, 0, 8]));
   const filter = useTransform(blur, (b) => `blur(${b}px)`);
   return (
     <motion.p style={{ opacity, y, filter }} className={`display mx-auto [text-shadow:0_2px_40px_rgb(12_11_16/0.7)] ${className}`}>

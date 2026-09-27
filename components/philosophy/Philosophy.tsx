@@ -1,5 +1,5 @@
-import { approach } from "@/lib/content";
-import { Rise, ScrollInk } from "@/components/ui/Reveal";
+import { Rise } from "@/components/ui/Reveal";
+import { HowWeWork } from "./HowWeWork";
 
 export function Philosophy() {
   return (
@@ -12,18 +12,11 @@ export function Philosophy() {
         </h2>
       </Rise>
 
-      <div className="mt-32 grid gap-12 md:mt-56 md:grid-cols-12">
-        <p className="label text-ink-2 md:col-span-3">How we work</p>
-        <div className="space-y-2 md:col-span-9 md:space-y-3">
-          {approach.map((line) => (
-            <ScrollInk key={line} className="text-[clamp(1.9rem,4.4vw,4.4rem)] font-medium leading-[1.08] tracking-[-0.04em]">
-              {line}
-            </ScrollInk>
-          ))}
-        </div>
+      <div className="mt-24 md:mt-40">
+        <HowWeWork />
       </div>
 
-      <Rise className="mt-40 md:mt-64">
+      <Rise className="mt-16 md:mt-24">
         <p className="display text-[clamp(3.2rem,10.5vw,11rem)]">
           Until it feels right<span className="text-violet">.</span>
         </p>
