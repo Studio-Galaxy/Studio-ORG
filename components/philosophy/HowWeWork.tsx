@@ -17,7 +17,7 @@ export function HowWeWork() {
 
   return (
     <div ref={ref} className="relative h-[520vh]">
-      <div className="sticky top-0 flex h-[100svh] items-center">
+      <div className="sticky top-0 flex h-[100svh] items-center overflow-x-clip">
         <div className="grid w-full gap-10 md:grid-cols-12">
           <div className="md:col-span-3">
             <p className="label text-ink-2">How we work</p>

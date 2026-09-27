@@ -25,6 +25,7 @@
     background: var(--color-cream);
     color: var(--color-ink);
     scroll-behavior: smooth;
+    overflow-x: clip;
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
   }

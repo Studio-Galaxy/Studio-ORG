@@ -2,7 +2,7 @@ import { Orb } from "./Orb";
 
 export function Hero() {
   return (
-    <section id="top" className="relative flex min-h-[100svh] flex-col px-5 pb-8 pt-32 md:px-10 md:pb-10 lg:px-16">
+    <section id="top" className="relative flex min-h-[100svh] flex-col overflow-x-clip px-5 pb-8 pt-32 md:px-10 md:pb-10 lg:px-16">
       <Orb className="absolute right-[18%] top-[22%] md:right-[16%] md:top-[26%]" />
 
       <div className="my-auto max-w-[1400px]">
