@@ -6,9 +6,12 @@ import { WhatWeCreate } from "@/components/create/WhatWeCreate";
 import { Possibilities } from "@/components/possibilities/Possibilities";
 import { Philosophy } from "@/components/philosophy/Philosophy";
 import { Capabilities } from "@/components/capabilities/Capabilities";
-// Galaxy chapter is switched off for now — uncomment this import and <Galaxy /> below to bring it back.
+// The dark scroll-driven Galaxy chapter is retired in favour of the interactive Universe.
 // import { Galaxy } from "@/components/galaxy/Galaxy";
-import { Contact, FinalStatement } from "@/components/contact/Contact";
+import { Universe } from "@/components/galaxy/Universe";
+import { NameReveal } from "@/components/galaxy/NameReveal";
+// FinalStatement ("Your idea shouldn't look like everyone else's.") is off for now — re-add it to this import and below to restore.
+import { Contact } from "@/components/contact/Contact";
 import { Footer } from "@/components/footer/Footer";
 
 export default function Home() {
@@ -27,7 +30,9 @@ export default function Home() {
         <Philosophy />
         <Capabilities />
         {/* <Galaxy /> */}
-        <FinalStatement />
+        <Universe />
+        <NameReveal />
+        {/* <FinalStatement /> */}
         <Contact />
       </main>
       <Footer />
