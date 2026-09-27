@@ -80,62 +80,6 @@ function Skip({ flip }: { flip?: boolean }) {
   );
 }
 
-export function WebScreen() {
-  return (
-    <div className="flex h-full flex-col text-ink">
-      <div className="flex items-center gap-3 border-b border-line px-4 py-3">
-        <span className="flex gap-1.5">
-          {[0, 1, 2].map((i) => <span key={i} className="size-2.5 rounded-full bg-ink/15" />)}
-        </span>
-        <span className="mx-auto rounded-full bg-cream-2 px-10 py-1 font-mono text-[10px] text-ink-2">yourproduct.com</span>
-      </div>
-      <div className="flex min-h-0 flex-1">
-        <aside className="hidden w-44 shrink-0 flex-col gap-1.5 border-r border-line p-4 @[520px]:flex">
-          <span className="mb-4 flex items-center gap-2 text-[13px] font-semibold">
-            <span className="size-4 rounded-md bg-ink" /> Product
-          </span>
-          {["Overview", "Projects", "People", "Insights", "Settings"].map((l, i) => (
-            <span key={l} className={`rounded-lg px-2.5 py-1.5 text-[12px] ${i === 0 ? "bg-lilac font-medium text-violet" : "text-ink-2"}`}>{l}</span>
-          ))}
-        </aside>
-        <main className="flex min-w-0 flex-1 flex-col gap-4 p-5">
-          <div className="flex items-center justify-between">
-            <p className="text-[22px] font-semibold tracking-[-0.04em]">Overview</p>
-            <span className="flex rounded-full bg-cream-2 p-0.5 text-[10px]">
-              <span className="rounded-full bg-white px-2.5 py-1 shadow-sm">Week</span>
-              <span className="px-2.5 py-1 text-ink-2">Month</span>
-            </span>
-          </div>
-          <div className="relative min-h-0 flex-1 rounded-2xl border border-line bg-white p-4">
-            <p className="text-[11px] text-ink-2">Activity</p>
-            <svg viewBox="0 0 400 140" preserveAspectRatio="none" className="absolute inset-x-4 bottom-4 h-[70%] w-[calc(100%-2rem)]">
-              <defs>
-                <linearGradient id="area" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0" stopColor="#7447ff" stopOpacity="0.25" />
-                  <stop offset="1" stopColor="#7447ff" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <path d="M0 110 C40 100 60 70 100 76 S160 110 200 80 S260 20 300 36 S360 60 400 18 V140 H0Z" fill="url(#area)" />
-              <path d="M0 110 C40 100 60 70 100 76 S160 110 200 80 S260 20 300 36 S360 60 400 18" fill="none" stroke="#7447ff" strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
-              <path d="M0 122 C60 118 100 100 160 108 S260 90 320 96 S380 80 400 76" fill="none" stroke="#242220" strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="4 4" vectorEffect="non-scaling-stroke" />
-            </svg>
-          </div>
-          <div className="grid grid-cols-2 gap-3 @[520px]:grid-cols-3">
-            {[0.7, 0.45, 0.85].map((v, i) => (
-              <div key={i} className={`rounded-2xl border border-line bg-white p-3.5 ${i === 2 ? "hidden @[520px]:block" : ""}`}>
-                <span className="block h-2 w-12 rounded-full bg-ink/15" />
-                <span className="mt-3 block h-1.5 rounded-full bg-cream-2">
-                  <span className="block h-full rounded-full bg-ink" style={{ width: `${v * 100}%` }} />
-                </span>
-              </div>
-            ))}
-          </div>
-        </main>
-      </div>
-    </div>
-  );
-}
-
 const FLOW = [
   { id: "in", label: "New message", kind: "Trigger", x: 4, y: 46 },
   { id: "ai", label: "Understand", kind: "AI", x: 38, y: 46 },

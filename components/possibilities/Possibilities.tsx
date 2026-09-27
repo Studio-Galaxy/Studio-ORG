@@ -4,7 +4,8 @@ import { motion, useScroll, useTransform, type MotionValue } from "motion/react"
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { possibilities } from "@/lib/content";
 import { peak, plateaus } from "@/lib/scroll";
-import { ExperimentScreen, FlowScreen, PhoneScreen, WebScreen } from "./Screens";
+import { ExperimentScreen, FlowScreen, PhoneScreen } from "./Screens";
+import { WebScreen } from "./WebScreen";
 
 // Frame size per stage: [w, h, radius]. Stage 0 is the question alone.
 const DESKTOP = { box: [760, 580], sizes: [[270, 560, 46], [270, 560, 46], [740, 480, 20], [700, 460, 30], [500, 500, 250]] };
@@ -112,7 +113,7 @@ function Layer({ stage, i, children }: { stage: MotionValue<number>; i: number; 
   const opacity = useTransform(stage, o.input, o.output);
   const visibility = useTransform(opacity, (v) => (v < 0.01 ? "hidden" : "visible"));
   return (
-    <motion.div aria-hidden style={{ opacity, visibility }} className="absolute inset-0">
+    <motion.div style={{ opacity, visibility }} className="absolute inset-0">
       {children}
     </motion.div>
   );
