@@ -90,9 +90,10 @@ const ramp = (p: number, a: number, b: number) => {
 };
 const TINTS = ["244,239,232", "201,182,255", "155,123,255"];
 
-type Frame = { w: number; h: number; p: number; t: number; tiltX: number; tiltY: number };
+export type Sky = { galaxy: HTMLCanvasElement; stars: { canvas: HTMLCanvasElement; pad: number } };
+type Frame = { w: number; h: number; p: number; t: number; tiltX: number; tiltY: number; sky: Sky };
 
-export function drawField(ctx: CanvasRenderingContext2D, f: Field, { w, h, p, t, tiltX, tiltY }: Frame) {
+export function drawField(ctx: CanvasRenderingContext2D, f: Field, { w, h, p, t, tiltX, tiltY, sky }: Frame) {
   const cx = w / 2;
   const cy = h * 0.46;
   const m = Math.min(w, h) / 2;
@@ -100,7 +101,7 @@ export function drawField(ctx: CanvasRenderingContext2D, f: Field, { w, h, p, t,
 
   const toGalaxy = ramp(p, 0.57, 0.72);
   const links = ramp(p, 0.42, 0.52) * (1 - ramp(p, 0.54, 0.59));
-  const dim = 1 - 0.55 * ramp(p, 0.85, 0.9);
+  const dim = 1 - 0.35 * ramp(p, 0.72, 0.77) - 0.2 * ramp(p, 0.85, 0.9);
   const fade = 1 - ramp(p, 0.93, 0.99);
   if (fade <= 0) return;
 
@@ -110,6 +111,31 @@ export function drawField(ctx: CanvasRenderingContext2D, f: Field, { w, h, p, t,
   const drift = t * 0.0004;
 
   const { X, Y, A } = f;
+
+  // the real thing: starfield, then the galaxy, tilted and turning slowly
+  const form = ramp(p, 0.58, 0.76);
+  const starsA = ramp(p, 0.55, 0.72) * fade * (1 - 0.3 * ramp(p, 0.85, 0.9));
+  if (starsA > 0.002) {
+    const { canvas: sc, pad } = sky.stars;
+    ctx.globalAlpha = starsA;
+    ctx.drawImage(sc, -pad - tiltX * 10, -pad - tiltY * 8, w + pad * 2, h + pad * 2);
+  }
+  const galA = form * dim * fade;
+  if (galA > 0.002) {
+    const Rs = m * (w < 768 ? 0.95 : 1.15) * (0.55 + 0.45 * form) * (1 + 0.1 * ramp(p, 0.72, 0.92));
+    const D = Rs / 0.48;
+    ctx.save();
+    ctx.globalAlpha = galA;
+    ctx.globalCompositeOperation = "lighter";
+    ctx.translate(cx, cy);
+    ctx.rotate(-0.38 + tiltX * 0.04);
+    ctx.scale(1, Math.cos(1.12 + tiltY * 0.06));
+    ctx.rotate(t * 0.000012 + (1 - form) * 1.6);
+    ctx.drawImage(sky.galaxy, -D / 2, -D / 2, D, D);
+    ctx.restore();
+  }
+  ctx.globalAlpha = 1;
+  const pointsA = 1 - ramp(p, 0.63, 0.75);
 
   for (let i = 0; i < f.n; i++) {
     const a = ramp(p, f.spawn[i], f.spawn[i] + 0.07);
@@ -158,30 +184,10 @@ export function drawField(ctx: CanvasRenderingContext2D, f: Field, { w, h, p, t,
     }
   }
 
-  // orbit guides, drawn in the disc plane
-  const guides = ramp(p, 0.62, 0.76) * 0.09 * dim * fade;
-  if (guides > 0.002) {
-    ctx.strokeStyle = `rgba(244,239,232,${guides})`;
-    ctx.lineWidth = 1;
-    for (const gr of [0.38, 0.7, 1.02]) {
-      ctx.beginPath();
-      for (let s = 0; s <= 96; s++) {
-        const ang = (s / 96) * Math.PI * 2;
-        const gy = Math.sin(ang) * gr;
-        const sc = 1 / (1 + gy * si * 0.45);
-        const x = cx + Math.cos(ang) * gr * sc * R;
-        const y = cy + gy * ci * sc * R;
-        if (s) ctx.lineTo(x, y);
-        else ctx.moveTo(x, y);
-      }
-      ctx.stroke();
-    }
-  }
-
   // points
   for (let i = 1; i < f.n; i++) {
     if (A[i] <= 0) continue;
-    const al = A[i] * f.lum[i] * dim * fade;
+    const al = A[i] * f.lum[i] * dim * fade * pointsA;
     ctx.fillStyle = `rgba(${TINTS[f.tint[i]]},${al})`;
     ctx.beginPath();
     ctx.arc(X[i], Y[i], f.size[i], 0, Math.PI * 2);
@@ -190,16 +196,16 @@ export function drawField(ctx: CanvasRenderingContext2D, f: Field, { w, h, p, t,
 
   // the first point: appears, swells, then settles as the galaxy's heart
   const born = ramp(p, 0.03, 0.09);
-  if (born > 0) {
+  if (born > 0 && pointsA > 0) {
     const swell = ramp(p, 0.14, 0.26) * (1 - 0.5 * toGalaxy);
     const glow = (22 + swell * 110) * (w < 768 ? 0.75 : 1);
     const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, glow);
-    g.addColorStop(0, `rgba(216,201,255,${0.55 * born * fade})`);
-    g.addColorStop(0.25, `rgba(116,71,255,${0.22 * born * fade})`);
+    g.addColorStop(0, `rgba(216,201,255,${0.55 * born * fade * pointsA})`);
+    g.addColorStop(0.25, `rgba(116,71,255,${0.22 * born * fade * pointsA})`);
     g.addColorStop(1, "rgba(116,71,255,0)");
     ctx.fillStyle = g;
     ctx.fillRect(cx - glow, cy - glow, glow * 2, glow * 2);
-    ctx.fillStyle = `rgba(255,255,255,${born * fade})`;
+    ctx.fillStyle = `rgba(255,255,255,${born * fade * pointsA})`;
     ctx.beginPath();
     ctx.arc(cx, cy, 2.4 + swell * 2.2, 0, Math.PI * 2);
     ctx.fill();

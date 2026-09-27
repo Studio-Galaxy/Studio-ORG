@@ -3,7 +3,8 @@
 import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "motion/react";
 import { useEffect, useRef } from "react";
 import { galaxy } from "@/lib/content";
-import { buildField, drawField, type Field } from "./field";
+import { buildField, drawField, type Field, type Sky } from "./field";
+import { buildGalaxy, buildStars } from "./sky";
 
 // Scroll timeline (0..1) for the chapter.
 const T = {
@@ -42,6 +43,8 @@ export function Galaxy() {
     const ctx = cv.getContext("2d")!;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let field: Field;
+    let sky: Sky;
+    let galaxySize = 0;
     let w = 0, h = 0, dpr = 1, raf = 0, visible = false;
     const tilt = { x: 0, y: 0, tx: 0, ty: 0 };
 
@@ -52,6 +55,10 @@ export function Galaxy() {
       cv.width = w * dpr;
       cv.height = h * dpr;
       field = buildField(w < 768 ? 700 : 1500);
+      // repaint the galaxy bitmap only when the needed resolution really changes
+      const need = Math.min(2048, Math.round(Math.min(w, h) * 1.4 * dpr));
+      const galaxy = !sky || Math.abs(need - galaxySize) / need > 0.2 ? buildGalaxy((galaxySize = need), w < 768 ? 38000 : 75000) : sky.galaxy;
+      sky = { galaxy, stars: buildStars(w, h, dpr) };
       frame(performance.now());
     };
 
@@ -60,7 +67,7 @@ export function Galaxy() {
       tilt.y += (tilt.ty - tilt.y) * 0.05;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
-      drawField(ctx, field, { w, h, p: progress.current, t: reduce ? 0 : t, tiltX: tilt.x, tiltY: tilt.y });
+      drawField(ctx, field, { w, h, p: progress.current, t: reduce ? 0 : t, tiltX: tilt.x, tiltY: tilt.y, sky });
     };
 
     const loop = (t: number) => {
@@ -137,7 +144,7 @@ function Line({ p, range, className, children }: { p: MotionValue<number>; range
   const blur = useTransform(p, range, [8, 0, 0, 8]);
   const filter = useTransform(blur, (b) => `blur(${b}px)`);
   return (
-    <motion.p style={{ opacity, y, filter }} className={`display mx-auto ${className}`}>
+    <motion.p style={{ opacity, y, filter }} className={`display mx-auto [text-shadow:0_2px_40px_rgb(12_11_16/0.7)] ${className}`}>
       {children}
     </motion.p>
   );
