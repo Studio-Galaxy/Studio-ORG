@@ -4,7 +4,8 @@ import { motion, useScroll, useTransform, type MotionValue } from "motion/react"
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { possibilities } from "@/lib/content";
 import { peak, plateaus } from "@/lib/scroll";
-import { ExperimentScreen, FlowScreen, PhoneScreen } from "./Screens";
+import { ExperimentScreen, FlowScreen } from "./Screens";
+import { PhoneScreen } from "./PhoneScreen";
 import { WebScreen } from "./WebScreen";
 
 // Frame size per stage: [w, h, radius]. Stage 0 is the question alone.
