@@ -13,15 +13,42 @@ const LAYOUTS: P[][] = [
   Array.from({ length: 9 }, (_, i) => [200, 200, i === 0 ? 7 : 0]),
   // design — construction geometry
   [[200, 200, 4], [200, 80, 4], [320, 200, 4], [200, 320, 4], [80, 200, 4], [115, 115, 4], [285, 115, 4], [285, 285, 4], [115, 285, 4]],
-  // engineering — a grid of modules
-  [[200, 200, 4], [200, 100, 4], [300, 200, 4], [200, 300, 4], [100, 200, 4], [100, 100, 4], [300, 100, 4], [300, 300, 4], [100, 300, 4]],
+  // engineering — status dots of a real-shaped system
+  [[207, 101, 3.5], [299, 101, 2.8], [285, 137, 2.8], [141, 293, 2.8], [115, 101, 2.8], [29, 107, 2.8], [207, 137, 2.8], [231, 293, 2.8], [301, 293, 2.8]],
   // intelligence — layered network
   [[200, 200, 6], [200, 98, 5], [306, 202, 5], [200, 302, 5], [94, 204, 5], [96, 124, 5], [304, 122, 5], [302, 282, 5], [98, 280, 5]],
   // experience — an interface
   [[160, 296, 4], [102, 252, 5], [300, 124, 7], [296, 222, 4], [102, 220, 5], [102, 188, 5], [122, 88, 3.5], [108, 88, 3.5], [94, 88, 3.5]],
 ];
 
-const MODULES = ["core", "api", "edge", "data", "auth", "ui", "jobs", "cache", "queue"];
+// Point 0 stays violet, then turns white on the button.
+const FILLS = LAYOUTS[0].map((_, i) => (i === 0 ? ["#7447ff", "#7447ff", "#7447ff", "#7447ff", "#ffffff"] : Array(5).fill("#242220")));
+
+// Engineering: an asymmetric system. [label, x, y, w, h?, tone?]
+type M = [string, number, number, number, number?, ("ai" | "bus")?];
+const MODS: M[] = [
+  ["web", 20, 96, 62], ["ios", 20, 128, 62], ["android", 20, 160, 62],
+  ["gateway", 106, 90, 60, 92],
+  ["api", 198, 90, 70], ["auth", 290, 90, 78],
+  ["search", 198, 126, 64], ["agents", 276, 126, 92, 22, "ai"],
+  ["jobs", 198, 162, 54], ["notify", 266, 162, 62],
+  ["event bus", 198, 200, 170, 18, "bus"],
+  ["postgres", 132, 282, 78], ["cache", 222, 282, 58], ["vector", 292, 282, 76],
+  ["blob", 132, 312, 66], ["replica", 222, 312, 72],
+  ["metrics", 20, 290, 76], ["logs", 20, 320, 56],
+];
+const ZONES: [string, number, number, number, number][] = [
+  ["clients", 12, 70, 78, 122], ["services", 186, 64, 196, 164], ["data", 120, 254, 262, 88], ["observe", 12, 264, 92, 86],
+];
+const WIRES = [
+  "M82 107 H106", "M82 139 H106", "M82 171 H106",
+  "M166 101 H198", "M166 137 H198", "M268 101 H290", "M262 112 V119 H300 V126",
+  "M225 184 V200", "M297 184 V200", "M340 148 V200",
+  "M240 218 V240 H171 V282", "M251 218 V282", "M368 137 H376 V293 H368",
+  "M190 304 V323 H222", "M120 182 V250 H58 V290", "M76 331 H110 V240 H198 V218",
+];
+const LIVE = [0, 3, 6, 12, 10];
+
 const NET_IN = [5, 4, 8];
 const NET_MID = [1, 0, 3];
 const NET_OUT = [6, 2, 7];
@@ -99,6 +126,7 @@ function Visual({ stage }: { stage: MotionValue<number> }) {
   const exp = useLayer(stage, 4, true);
   const draw = useTransform(stage, [0.3, 1], [0, 1]);
   const frameScale = useTransform(stage, [3.3, 4], [0.9, 1]);
+  const wire = useTransform(stage, [1.3, 2], [0, 1]);
 
   const at = (i: number, k: number) => LAYOUTS[k][i];
   const curve = (a: P, b: P) => `M${a[0]} ${a[1]} C${(a[0] + b[0]) / 2} ${a[1]} ${(a[0] + b[0]) / 2} ${b[1]} ${b[0]} ${b[1]}`;
@@ -125,18 +153,29 @@ function Visual({ stage }: { stage: MotionValue<number> }) {
         <text x="326" y="72" fontSize="9" fill="#6f6961" stroke="none" fontFamily="var(--font-mono)">r 120</text>
       </motion.g>
 
-      {/* engineering: modules + connectors */}
-      <motion.g style={{ opacity: eng }}>
-        <g fill="none" stroke="#242220" strokeOpacity="0.28">
-          <path d="M100 100 H300 M100 200 H300 M100 300 H300 M100 100 V300 M200 100 V300 M300 100 V300" />
+      {/* engineering: an asymmetric system, wired up */}
+      <motion.g style={{ opacity: eng }} fontFamily="var(--font-mono)">
+        {ZONES.map(([name, x, y, w, h]) => (
+          <g key={name}>
+            <rect x={x} y={y} width={w} height={h} rx="12" fill="#242220" fillOpacity="0.025" stroke="#242220" strokeOpacity="0.2" strokeDasharray="3 4" />
+            <text x={x + 8} y={y - 5} fontSize="7.5" fill="#a39b91" letterSpacing="0.08em">{name.toUpperCase()}</text>
+          </g>
+        ))}
+        <g fill="none" stroke="#242220" strokeOpacity="0.35" strokeLinejoin="round">
+          {WIRES.map((d) => <motion.path key={d} d={d} style={{ pathLength: wire }} />)}
         </g>
-        <g fill="none" stroke="#7447ff" strokeWidth="1.4" className="anim-flow">
-          <path d="M200 200 H300 M200 200 V100 M100 100 H200 M300 300 V200" />
+        <g fill="none" stroke="#7447ff" strokeWidth="1.4" strokeLinejoin="round">
+          {LIVE.map((k, i) => <path key={k} d={WIRES[k]} className="anim-flow" style={{ animationDelay: `${i * -0.3}s` }} />)}
         </g>
-        {LAYOUTS[2].map(([x, y], i) => (
-          <g key={i} transform={`translate(${x} ${y})`}>
-            <rect x="-14" y="-15" width="64" height="30" rx="9" fill="#fbf7f1" stroke="#242220" strokeOpacity="0.5" />
-            <text x="10" y="3.5" fontSize="10" fill="#242220" fontFamily="var(--font-mono)">{MODULES[i]}</text>
+        {MODS.map(([label, x, y, w, h = 22, tone]) => (
+          <g key={label}>
+            <rect
+              x={x} y={y} width={w} height={h} rx="7"
+              fill={tone === "ai" ? "#ebe3ff" : tone === "bus" ? "#d8c9ff" : "#fbf7f1"}
+              stroke={tone ? "#7447ff" : "#242220"} strokeOpacity={tone ? 0.5 : 0.45}
+            />
+            <circle cx={x + 9} cy={y + 11} r="2.6" fill={tone ? "#7447ff" : "#242220"} opacity={tone === "bus" ? 1 : 0.35} />
+            <text x={x + 17} y={y + 14} fontSize="8.5" fill="#242220">{label}</text>
           </g>
         ))}
       </motion.g>
@@ -184,7 +223,7 @@ function Node({ i, stage }: { i: number; stage: MotionValue<number> }) {
   const cx = useTransform(stage, ks, LAYOUTS.map((l) => l[i][0]));
   const cy = useTransform(stage, ks, LAYOUTS.map((l) => l[i][1]));
   const r = useTransform(stage, ks, LAYOUTS.map((l) => l[i][2]));
-  // Point 0 becomes the button; it turns white against the violet.
-  const fill = useTransform(stage, [3.5, 4], i === 0 ? ["#7447ff", "#ffffff"] : ["#242220", "#242220"]);
+  // Point 0 marks the api, then becomes the button; it turns white against the violet.
+  const fill = useTransform(stage, ks, FILLS[i]);
   return <motion.circle cx={cx} cy={cy} r={r} style={{ fill }} className={i === 0 ? "drop-shadow-[0_0_6px_rgb(116_71_255/0.8)]" : ""} />;
 }
