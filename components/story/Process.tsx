@@ -17,8 +17,8 @@ const LAYOUTS: P[][] = [
   [[207, 101, 3.5], [299, 101, 2.8], [285, 137, 2.8], [141, 293, 2.8], [115, 101, 2.8], [29, 107, 2.8], [207, 137, 2.8], [231, 293, 2.8], [301, 293, 2.8]],
   // intelligence — layered network
   [[200, 200, 6], [200, 98, 5], [306, 202, 5], [200, 302, 5], [94, 204, 5], [96, 124, 5], [304, 122, 5], [302, 282, 5], [98, 280, 5]],
-  // experience — an interface
-  [[160, 296, 4], [102, 252, 5], [300, 124, 7], [296, 222, 4], [102, 220, 5], [102, 188, 5], [122, 88, 3.5], [108, 88, 3.5], [94, 88, 3.5]],
+  // experience — a product in someone's hands
+  [[226, 146, 3.2], [148, 252, 8.5], [148, 286, 8.5], [372, 64, 3], [152, 340, 3.2], [184, 340, 3.2], [216, 340, 3.2], [248, 340, 3.2], [126, 290, 3]],
 ];
 
 // Point 0 stays violet, then turns white on the button.
@@ -194,21 +194,76 @@ function Visual({ stage }: { stage: MotionValue<number> }) {
         <circle cx="200" cy="200" r="44" fill="url(#p-glow)" />
       </motion.g>
 
-      {/* experience: the interface */}
-      <motion.g style={{ opacity: exp, scale: frameScale, transformOrigin: "200px 200px" }}>
-        <rect x="68" y="64" width="264" height="276" rx="26" fill="#fbf7f1" stroke="#242220" strokeOpacity="0.12" style={{ filter: "drop-shadow(0 24px 30px rgb(36 34 32 / 0.14))" }} />
-        <path d="M68 108 H332" stroke="#242220" strokeOpacity="0.08" />
-        <rect x="94" y="124" width="116" height="13" rx="6.5" fill="#242220" />
-        <rect x="94" y="145" width="72" height="8" rx="4" fill="#242220" opacity="0.2" />
-        <rect x="276" y="113" width="46" height="22" rx="11" fill="#d8c9ff" />
-        {[188, 220, 252].map((y, i) => (
-          <g key={y}>
-            <rect x="116" y={y - 4} width={[132, 104, 118][i]} height="8" rx="4" fill="#242220" opacity="0.72" />
-            <rect x="272" y={y - 4} width="36" height="8" rx="4" fill="#242220" opacity="0.12" />
-          </g>
-        ))}
-        <rect x="140" y="278" width="120" height="36" rx="18" fill="#7447ff" />
-        <text x="210" y="300" textAnchor="middle" fontSize="11" fontWeight="500" fill="#fff" fontFamily="var(--font-sans)">Get started</text>
+      {/* experience: a phone, a notification, a widget — real content */}
+      <motion.g style={{ opacity: exp, scale: frameScale, transformOrigin: "200px 200px" }} fontFamily="var(--font-sans)">
+        <defs>
+          <radialGradient id="x-art" cx="0.7" cy="0.35" r="0.9">
+            <stop offset="0" stopColor="#d8c9ff" />
+            <stop offset="0.35" stopColor="#7447ff" />
+            <stop offset="1" stopColor="#1b1428" />
+          </radialGradient>
+          <filter id="x-shadow" filterUnits="userSpaceOnUse" x="-60" y="-60" width="520" height="520">
+            <feDropShadow dx="0" dy="14" stdDeviation="14" floodColor="#242220" floodOpacity="0.18" />
+          </filter>
+        </defs>
+
+        {/* phone */}
+        <g filter="url(#x-shadow)">
+          <rect x="120" y="34" width="160" height="332" rx="30" fill="#141217" />
+        </g>
+        <rect x="126" y="40" width="148" height="320" rx="25" fill="#fbf7f1" />
+        <rect x="176" y="47" width="48" height="13" rx="6.5" fill="#141217" />
+        <text x="140" y="57" fontSize="7.5" fontWeight="600" fill="#242220">9:41</text>
+        <text x="140" y="84" fontSize="7.5" fill="#6f6961">Good evening,</text>
+        <text x="140" y="101" fontSize="14" fontWeight="600" letterSpacing="-0.4" fill="#242220">Your universe</text>
+
+        <rect x="136" y="112" width="128" height="94" rx="16" fill="url(#x-art)" />
+        <g fill="none" stroke="#fff" strokeOpacity="0.28">
+          {[16, 28, 42, 58].map((r) => (
+            <ellipse key={r} cx="226" cy="146" rx={r} ry={r * 0.4} transform="rotate(-20 226 146)" />
+          ))}
+        </g>
+        <circle cx="226" cy="146" r="16" fill="#fff" opacity="0.18" />
+        <text x="146" y="186" fontSize="10" fontWeight="600" fill="#fff">Launch night</text>
+        <text x="146" y="197" fontSize="7" fill="#fff" fillOpacity="0.7">Tonight · 8 pm</text>
+
+        <rect x="136" y="214" width="26" height="16" rx="8" fill="#242220" />
+        <text x="149" y="224.5" fontSize="7" fontWeight="500" textAnchor="middle" fill="#fff">All</text>
+        <rect x="166" y="214" width="34" height="16" rx="8" fill="none" stroke="#242220" strokeOpacity="0.15" />
+        <text x="183" y="224.5" fontSize="7" textAnchor="middle" fill="#242220">Saved</text>
+        <rect x="204" y="214" width="40" height="16" rx="8" fill="none" stroke="#242220" strokeOpacity="0.15" />
+        <text x="224" y="224.5" fontSize="7" textAnchor="middle" fill="#242220">Friends</text>
+        <circle cx="186" cy="224" r="11" fill="#7447ff" fillOpacity="0.12" stroke="#7447ff" strokeOpacity="0.45" className="anim-breathe" style={{ transformBox: "fill-box", transformOrigin: "center" }} />
+
+        <text x="163" y="250" fontSize="8" fontWeight="600" fill="#242220">Maya shared this</text>
+        <text x="163" y="260" fontSize="6.5" fill="#a39b91">2 min ago</text>
+        <path d="M163 269 H264" stroke="#242220" strokeOpacity="0.08" />
+        <text x="163" y="284" fontSize="8" fontWeight="600" fill="#242220">New chapter unlocked</text>
+        <text x="163" y="294" fontSize="6.5" fill="#a39b91">Today</text>
+        <text x="258" y="253" fontSize="9" fill="#7447ff" textAnchor="end">♥</text>
+
+        <path d="M126 322 H274" stroke="#242220" strokeOpacity="0.08" />
+        <rect x="146" y="347" width="12" height="2.5" rx="1.25" fill="#7447ff" />
+        <rect x="178" y="352" width="44" height="3" rx="1.5" fill="#242220" opacity="0.8" />
+
+        {/* notification */}
+        <g filter="url(#x-shadow)">
+          <rect x="226" y="44" width="158" height="40" rx="14" fill="#fff" />
+        </g>
+        <rect x="236" y="54" width="20" height="20" rx="6" fill="#242220" />
+        <circle cx="246" cy="64" r="4.5" fill="none" stroke="#f7f0e7" strokeWidth="1.6" />
+        <circle cx="250.5" cy="59.5" r="2" fill="#9b7bff" />
+        <text x="264" y="61" fontSize="7" fontWeight="600" fill="#242220">Studio Galaxy</text>
+        <text x="264" y="74" fontSize="8" fill="#242220">Your idea is live.</text>
+
+        {/* widget */}
+        <g filter="url(#x-shadow)">
+          <rect x="20" y="252" width="120" height="70" rx="16" fill="#fff" />
+        </g>
+        <text x="32" y="268" fontSize="7" fill="#6f6961">Moments</text>
+        <text x="32" y="282" fontSize="11" fontWeight="600" letterSpacing="-0.3" fill="#242220">Growing</text>
+        <path d="M32 308 C48 306 54 298 66 300 S88 306 98 296 S116 292 126 290" fill="none" stroke="#7447ff" strokeWidth="1.6" strokeLinecap="round" />
+        <path d="M32 308 C48 306 54 298 66 300 S88 306 98 296 S116 292 126 290 V312 H32 Z" fill="#7447ff" fillOpacity="0.08" />
       </motion.g>
 
       {LAYOUTS[0].map((_, i) => (
