@@ -45,14 +45,14 @@ function DesignSystems() {
     <div className="flex size-full flex-col justify-center gap-3 px-6">
       <div className="flex gap-2">
         {["bg-ink", "bg-violet", "bg-lavender", "bg-cream-2"].map((c, i) => (
-          <span key={c} className={`size-7 rounded-lg ring-1 ring-line ${c} ${i === 1 ? "animate-pulse" : ""}`} />
+          <span key={c} className={`size-6 rounded-lg ring-1 ring-line @[240px]:size-7 ${c} ${i === 1 ? "animate-pulse" : ""}`} />
         ))}
       </div>
       <div className="flex items-baseline gap-2 font-semibold tracking-[-0.04em]">
         <span className="text-[22px]">Aa</span>
         <span className="text-[16px]">Aa</span>
         <span className="text-[12px]">Aa</span>
-        <span className="ml-auto font-mono text-[9px] font-normal tracking-normal text-ink-3">--radius · 8 · 16</span>
+        <span className="ml-auto hidden font-mono text-[9px] font-normal tracking-normal text-ink-3 @[240px]:inline">--radius · 8 · 16</span>
       </div>
     </div>
   );

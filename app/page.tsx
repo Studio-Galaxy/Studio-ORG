@@ -6,7 +6,8 @@ import { WhatWeCreate } from "@/components/create/WhatWeCreate";
 import { Possibilities } from "@/components/possibilities/Possibilities";
 import { Philosophy } from "@/components/philosophy/Philosophy";
 import { Capabilities } from "@/components/capabilities/Capabilities";
-import { Galaxy } from "@/components/galaxy/Galaxy";
+// Galaxy chapter is switched off for now — uncomment this import and <Galaxy /> below to bring it back.
+// import { Galaxy } from "@/components/galaxy/Galaxy";
 import { Contact, FinalStatement } from "@/components/contact/Contact";
 import { Footer } from "@/components/footer/Footer";
 
@@ -25,7 +26,7 @@ export default function Home() {
         <Possibilities />
         <Philosophy />
         <Capabilities />
-        <Galaxy />
+        {/* <Galaxy /> */}
         <FinalStatement />
         <Contact />
       </main>

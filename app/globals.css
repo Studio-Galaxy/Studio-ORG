@@ -26,6 +26,7 @@
     color: var(--color-ink);
     scroll-behavior: smooth;
     overflow-x: clip;
+    scrollbar-width: none; /* page still scrolls; the bar is just hidden */
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
   }
@@ -34,6 +35,9 @@
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
     overflow-x: clip;
+  }
+  html::-webkit-scrollbar {
+    display: none;
   }
   ::selection {
     background: var(--color-lavender);

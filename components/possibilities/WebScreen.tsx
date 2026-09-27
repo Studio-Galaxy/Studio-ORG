@@ -79,7 +79,7 @@ export function WebScreen() {
           ))}
         </aside>
 
-        <main className="flex min-w-0 flex-1 flex-col gap-4 p-5">
+        <div className="flex min-w-0 flex-1 flex-col gap-4 p-5">
           <div className="flex items-center justify-between">
             <p className="text-[22px] font-semibold tracking-[-0.04em]">Overview</p>
             <div role="group" aria-label="Chart range" className="relative flex rounded-full bg-cream-2 p-0.5 text-[10px]">
@@ -206,7 +206,7 @@ export function WebScreen() {
               </div>
             ))}
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );

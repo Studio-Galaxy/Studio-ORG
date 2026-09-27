@@ -5,6 +5,41 @@ import { useEffect, useState } from "react";
 import { nav, site } from "@/lib/content";
 import { LogoMark } from "@/components/ui/Logo";
 
+// Scroll to an in-page section. Driven frame by frame rather than with native smooth
+// scrolling, which stops short when it crosses pinned chapters that change as they scroll.
+let cancelGlide: (() => void) | null = null;
+
+function glide(el: HTMLElement) {
+  cancelGlide?.();
+  const target = () => el.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);
+  const from = window.scrollY;
+  const distance = Math.abs(target() - from);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || distance < 2) return window.scrollTo({ top: target(), behavior: "instant" });
+
+  const duration = Math.min(1600, 500 + distance * 0.04);
+  const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+  const events = ["wheel", "touchstart", "keydown"] as const;
+  let raf = 0;
+  const stop = () => {
+    cancelAnimationFrame(raf);
+    events.forEach((e) => removeEventListener(e, stop));
+    cancelGlide = null;
+  };
+  events.forEach((e) => addEventListener(e, stop, { passive: true }));
+  cancelGlide = stop;
+
+  const start = performance.now();
+  const step = (now: number) => {
+    const t = Math.min(1, (now - start) / duration);
+    // re-measure every frame so any layout change on the way is absorbed
+    window.scrollTo({ top: from + (target() - from) * ease(t), behavior: "instant" });
+    if (t < 1) raf = requestAnimationFrame(step);
+    else stop();
+  };
+  raf = requestAnimationFrame(step);
+}
+
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -14,6 +49,25 @@ export function Nav() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // one handler for every in-page link on the site (nav, menu, footer, CTAs)
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element | null)?.closest?.('a[href^="#"]');
+      const id = a?.getAttribute("href")?.slice(1);
+      if (!a || !id) return;
+      const el = document.getElementById(id);
+      if (!el) return;
+      e.preventDefault();
+      setOpen(false);
+      history.pushState(null, "", `#${id}`);
+      // next frame: the menu's scroll lock has been released
+      requestAnimationFrame(() => glide(el));
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
   }, []);
 
   useEffect(() => {
