@@ -8,10 +8,10 @@ export const site = {
 };
 
 export const nav = [
-  { label: "Work", href: "#create" },
-  { label: "Capabilities", href: "#capabilities" },
-  { label: "About", href: "#approach" },
-  { label: "Contact", href: "#contact" },
+  { label: "Work", href: "/#create" },
+  { label: "Capabilities", href: "/#capabilities" },
+  { label: "About", href: "/#approach" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export const idea = [

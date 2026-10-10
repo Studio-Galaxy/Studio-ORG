@@ -51,13 +51,23 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // arriving from another page with a #section (e.g. /privacy → /#contact):
+  // the browser's own jump stops short across pinned chapters, so glide there instead
+  useEffect(() => {
+    const el = location.hash && document.getElementById(location.hash.slice(1));
+    if (el) requestAnimationFrame(() => glide(el));
+  }, []);
+
   // one handler for every in-page link on the site (nav, menu, footer, CTAs)
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      const a = (e.target as Element | null)?.closest?.('a[href^="#"]');
-      const id = a?.getAttribute("href")?.slice(1);
-      if (!a || !id) return;
+      const a = (e.target as Element | null)?.closest?.<HTMLAnchorElement>('a[href*="#"]');
+      if (!a) return;
+      // only links to a section of the page we're on; others navigate normally
+      const url = new URL(a.href);
+      const id = url.hash.slice(1);
+      if (!id || url.origin !== location.origin || url.pathname !== location.pathname) return;
       const el = document.getElementById(id);
       if (!el) return;
       e.preventDefault();
@@ -91,7 +101,8 @@ export function Nav() {
             : "max-w-[1440px] border border-transparent py-3 pl-1 pr-1 md:px-4"
         }`}
       >
-        <a href="#top" className="flex items-center gap-2.5 text-ink" aria-label={`${site.name}, back to top`}>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- plain anchor so glide() handles it on the home page */}
+        <a href="/#top" className="flex items-center gap-2.5 text-ink" aria-label={`${site.name}, back to top`}>
           <LogoMark className="size-7" />
           <span className="text-[17px] font-semibold tracking-[-0.03em]">{site.name}</span>
         </a>

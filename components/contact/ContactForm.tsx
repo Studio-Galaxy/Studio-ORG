@@ -39,7 +39,15 @@ export function ContactForm() {
 
             <div className="flex flex-col-reverse items-start gap-6 md:col-span-2 md:flex-row md:items-center md:justify-between">
               <p aria-live="polite" className="text-[15px] text-ink-2">
-                {state?.error ?? "We usually reply within a few days."}
+                {state?.error ?? (
+                  <>
+                    We usually reply within a few days. We only use this to reply —{" "}
+                    <a href="/privacy" className="link-line text-ink">
+                      privacy
+                    </a>
+                    .
+                  </>
+                )}
               </p>
               <Pill type="submit" disabled={pending}>
                 {pending ? "Sending…" : "Send message"}

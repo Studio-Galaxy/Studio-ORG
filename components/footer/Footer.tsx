@@ -27,7 +27,12 @@ export function Footer() {
         </div>
       </div>
       <div className="mt-16 flex items-center justify-between text-[13px] text-ink-3">
-        <p>© 2026 {site.name}</p>
+        <p>
+          © 2026 {site.name} ·{" "}
+          <a href="/privacy" className="link-line">
+            Privacy
+          </a>
+        </p>
         <a href="#top" className="link-line">Back to top ↑</a>
       </div>
     </footer>
