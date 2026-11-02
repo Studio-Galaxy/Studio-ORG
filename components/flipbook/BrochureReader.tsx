@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import {
   SGFlipBook,
+  configurePdf,
   argb,
   useFlipBookController,
   useFlipBookValue,
@@ -16,6 +17,11 @@ import { brochure } from "@/lib/content";
 // the book breathes on every turn, and the last page hands over to us.
 
 const SOURCE = { url: brochure.url }; // stable: a new object would reopen the book
+
+// pdf.js legacy worker, to match the legacy library aliased in next.config.ts (older phones).
+if (typeof window !== "undefined") {
+  configurePdf({ workerSrc: new URL("pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString() });
+}
 const THEME = {
   pageBackColor: argb(0xfff7f0e7),
   placeholderColor: argb(0xffefe6da),
@@ -241,9 +247,13 @@ export function BrochureReader() {
                   The book didn’t open.
                 </p>
                 <p className="max-w-sm text-[15px] text-ink-2">
-                  {load.error.kind === "renderer"
-                    ? "Your browser can’t draw it (it needs WebGL2). The PDF still works."
-                    : "Check your connection and try again."}
+                  {load.error.kind === "network"
+                    ? "Check your connection and try again."
+                    : "This browser couldn’t open it. Try updating it, or download the PDF."}
+                </p>
+                {/* the real reason, small, so a failure can be diagnosed from a screenshot */}
+                <p className="label max-w-sm normal-case tracking-normal opacity-60">
+                  {load.error.kind}: {load.error.message}
                 </p>
                 <div className="flex gap-3">
                   <button
@@ -256,7 +266,7 @@ export function BrochureReader() {
                   <a
                     href={brochure.url}
                     download
-                    className="rounded-full bg-cream-2 px-5 py-2.5 text-[14px]"
+                    className="rounded-full bg-cream-2 px-5 py-2.5 text-[14px] text-ink"
                   >
                     Download the PDF
                   </a>
