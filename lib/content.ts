@@ -70,6 +70,7 @@ export const galaxy = [
 // The brochure flipbook (/projects/flipbook). Pages are zero-based.
 export const brochure = {
   url: "/projects/flipbook/studio-galaxy-brochure.pdf",
+  pageAspect: 210 / 297, // A4 portrait: the reader's window is sized to the pages exactly
   darkPages: [1, 7, 11],
   chapters: [
     { title: "Cover", from: 0, line: "It begins with a promise." },
