@@ -71,16 +71,18 @@ export const galaxy = [
 export const brochure = {
   url: "/projects/flipbook/studio-galaxy-brochure.pdf",
   pageAspect: 210 / 297, // A4 portrait: the reader's window is sized to the pages exactly
-  darkPages: [1, 7, 11],
+  darkPages: [0, 2, 7, 11],
   chapters: [
-    { title: "Cover", from: 0, line: "It begins with a promise." },
-    { title: "The idea", from: 1, line: "Every idea starts as a single point." },
-    { title: "The process", from: 3, line: "Watch it take shape." },
-    { title: "What we create", from: 5, line: "Four things we do every day." },
-    { title: "Possibilities", from: 7, line: "What could we build?" },
-    { title: "How we work", from: 8, line: "Simple outside. Serious inside." },
-    { title: "Capabilities", from: 9, line: "Everything an idea needs." },
-    { title: "The galaxy", from: 10, line: "Different ideas. One universe." },
-    { title: "Your turn", from: 11, line: "Have an idea? Let’s build it." },
+    { title: "Cover", from: 0, line: "A field guide to working with us." },
+    { title: "Contents", from: 1, line: "Everything inside, at a glance." },
+    { title: "Who we are", from: 2, line: "Designers and engineers, in one room." },
+    { title: "What we do", from: 3, line: "Four disciplines, one team." },
+    { title: "How a project runs", from: 5, line: "From first call to launch — and after." },
+    { title: "Working together", from: 6, line: "Pick the shape that fits." },
+    { title: "What to expect", from: 7, line: "Our promises, in writing." },
+    { title: "Made in the studio", from: 8, line: "You’re holding one of our products." },
+    { title: "Questions", from: 9, line: "The things people usually ask." },
+    { title: "Start a project", from: 10, line: "Starting is simple." },
+    { title: "Back cover", from: 11, line: "Let’s build something worth experiencing." },
   ],
 };

@@ -216,13 +216,13 @@ export function BrochureReader() {
               <motion.div
                 key="loading"
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 flex flex-col items-center justify-center gap-6 text-ink"
+                className={`absolute inset-0 flex flex-col items-center justify-center gap-6 ${tone(leftDark && rightDark)}`}
               >
                 <span className="relative flex size-3">
                   <span className="absolute -inset-6 animate-ping rounded-full bg-violet/20" />
                   <span className="size-3 rounded-full bg-violet shadow-[0_0_18px_4px_rgb(116_71_255/0.6)]" />
                 </span>
-                <p className="label text-ink-2">
+                <p className={`label ${soft(leftDark && rightDark)}`}>
                   Opening the book
                   {download > 0 && download < 1
                     ? ` · ${Math.round(download * 100)}%`
@@ -235,7 +235,7 @@ export function BrochureReader() {
                 key="failed"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="absolute inset-0 flex flex-col items-center justify-center gap-5 text-center text-ink"
+                className={`absolute inset-0 flex flex-col items-center justify-center gap-5 text-center ${tone(leftDark && rightDark)}`}
               >
                 <p className="display text-[clamp(1.8rem,3.4vw,3rem)]">
                   The book didn’t open.
