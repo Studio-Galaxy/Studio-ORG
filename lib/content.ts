@@ -8,7 +8,7 @@ export const site = {
 };
 
 export const nav = [
-  { label: "Work", href: "/#create" },
+  { label: "Projects", href: "/projects/flipbook" },
   { label: "Capabilities", href: "/#capabilities" },
   { label: "About", href: "/#approach" },
   { label: "Contact", href: "/#contact" },
@@ -66,3 +66,20 @@ export const galaxy = [
   "A system.",
   "An experience.",
 ];
+
+// The brochure flipbook (/projects/flipbook). Pages are zero-based.
+export const brochure = {
+  url: "/projects/flipbook/studio-galaxy-brochure.pdf",
+  darkPages: [1, 7, 11],
+  chapters: [
+    { title: "Cover", from: 0, line: "It begins with a promise." },
+    { title: "The idea", from: 1, line: "Every idea starts as a single point." },
+    { title: "The process", from: 3, line: "Watch it take shape." },
+    { title: "What we create", from: 5, line: "Four things we do every day." },
+    { title: "Possibilities", from: 7, line: "What could we build?" },
+    { title: "How we work", from: 8, line: "Simple outside. Serious inside." },
+    { title: "Capabilities", from: 9, line: "Everything an idea needs." },
+    { title: "The galaxy", from: 10, line: "Different ideas. One universe." },
+    { title: "Your turn", from: 11, line: "Have an idea? Let’s build it." },
+  ],
+};
