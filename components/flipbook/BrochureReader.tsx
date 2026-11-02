@@ -383,25 +383,22 @@ export function BrochureReader() {
             className={`min-w-0 transition-colors duration-700 ${tone(leftDark)}`}
             aria-live="polite"
           >
-            <p
-              className={`label mb-2 transition-colors duration-700 ${soft(leftDark)}`}
+            {/* One motion per chapter change: the old caption leaves at once, label and line rise in together. */}
+            <motion.div
+              key={chapter}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease }}
             >
-              {pad(chapter + 1)} — {brochure.chapters[chapter]?.title}
-            </p>
-            <div className="h-[clamp(1.9rem,3vw,2.8rem)] overflow-hidden">
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.p
-                  key={chapter}
-                  initial={{ y: "100%" }}
-                  animate={{ y: 0 }}
-                  exit={{ y: "-100%" }}
-                  transition={{ duration: 0.8, ease }}
-                  className="display truncate text-[clamp(1.5rem,2.6vw,2.4rem)] leading-[1.15]"
-                >
-                  {brochure.chapters[chapter]?.line}
-                </motion.p>
-              </AnimatePresence>
-            </div>
+              <p
+                className={`label mb-2 transition-colors duration-700 ${soft(leftDark)}`}
+              >
+                {pad(chapter + 1)} — {brochure.chapters[chapter]?.title}
+              </p>
+              <p className="display truncate text-[clamp(1.5rem,2.6vw,2.4rem)] leading-[1.15]">
+                {brochure.chapters[chapter]?.line}
+              </p>
+            </motion.div>
           </div>
 
           <div
